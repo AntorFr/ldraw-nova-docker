@@ -24,11 +24,16 @@ A tag `vX.Y.Z` on this fork publishes `ghcr.io/antorfr/ldraw-nova-docker:X.Y.Z` 
 
 ## Following an upstream release
 
+This fork's tags reuse upstream's names (`v0.6.0` here = upstream `v0.6.0` + this
+workflow), so upstream tags must never land in `refs/tags/`: fetch them under the
+`upstream` remote instead.
+
 ```sh
-git fetch upstream --tags
-git merge vX.Y.Z                 # the new upstream release
-# set NOVA_REF: vX.Y.Z in .github/workflows/docker-publish.yml
-git tag vX.Y.Z && git push origin main vX.Y.Z
+git config remote.upstream.tagOpt --no-tags      # once per clone
+git fetch upstream refs/tags/vX.Y.Z:refs/remotes/upstream/vX.Y.Z
+git merge upstream/vX.Y.Z        # the new upstream release
+# set NOVA_REF: vX.Y.Z in .github/workflows/docker-publish.yml, commit
+git tag vX.Y.Z && git push origin main && git push origin vX.Y.Z
 ```
 
 ## Running it
